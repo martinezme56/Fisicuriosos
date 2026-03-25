@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FISICURIOSOS | Máquina de Rube Goldberg</title>
+
+  <!-- Fuente -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --azul: #0f172a;
+      --azul2: #1e293b;
+      --amarillo: #f59e0b;
+      --amarillo2: #fbbf24;
+      --blanco: #ffffff;
+      --gris: #f8fafc;
+      --gris2: #e2e8f0;
+      --texto: #334155;
+      --verde: #10b981;
+      --sombra: 0 10px 30px rgba(0,0,0,0.10);
+      --radio: 18px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--gris);
+      color: var(--texto);
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+      border-radius: 14px;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+
+    /* NAV */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--blanco);
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: var(--amarillo2);
+    }
+
+    .menu {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .menu a {
+      color: var(--blanco);
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: 0.3s ease;
+    }
+
+    .menu a:hover {
+      color: var(--amarillo2);
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(rgba(15,23,42,0.75), rgba(15,23,42,0.75)),
+        url("https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?q=80&w=1400&auto=format&fit=crop") center/cover no-repeat;
+      color: white;
+    }
+
+    .hero-content {
+      max-width: 700px;
+      padding: 60px 0;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      font-size: 1.08rem;
+      margin-bottom: 28px;
+      color: #e2e8f0;
+    }
+
+    .btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 13px 22px;
+      border-radius: 999px;
+      font-weight: 600;
+      transition: 0.3s ease;
+    }
+
+    .btn-primary {
+      background: var(--amarillo);
+      color: var(--azul);
+    }
+
+    .btn-primary:hover {
+      background: var(--amarillo2);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      border: 2px solid white;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      color: var(--azul);
+    }
+
+    /* SECCIONES */
+    section {
+      padding: 80px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 18px;
+      font-size: 2rem;
+      color: var(--azul);
+    }
+
+    .section-subtitle {
+      text-align: center;
+      max-width: 750px;
+      margin: 0 auto 45px auto;
+      color: #64748b;
+    }
+
+    /* INFO */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 35px;
+      align-items: center;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 28px;
+    }
+
+    .card h3 {
+      color: var(--azul);
+      margin-bottom: 14px;
+      font-size: 1.3rem;
+    }
+
+    .highlight {
+      color: var(--amarillo);
+      font-weight: 700;
+    }
+
+    /* ETAPAS */
+    .etapas-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+    }
+
+    .etapa-card {
+      background: white;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 24px 18px;
+      transition: 0.3s ease;
+      border-top: 5px solid var(--amarillo);
+    }
+
+    .etapa-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .etapa-num {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--amarillo);
+      color: var(--azul);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 14px;
+      font-size: 1.1rem;
+    }
+
+    .etapa-card h4 {
+      color: var(--azul);
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    .etapa-card p {
+      font-size: 0.95rem;
+      color: #475569;
+    }
+
+    /* OBJETIVOS */
+    .objetivos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .objetivo-box {
+      background: white;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 28px;
+    }
+
+    .objetivo-box h3 {
+      margin-bottom: 16px;
+      color: var(--azul);
+    }
+
+    .objetivo-box ul {
+      padding-left: 20px;
+    }
+
+    .objetivo-box li {
+      margin-bottom: 12px;
+    }
+
+    /* INTEGRANTES */
+    .integrantes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .integrante-card {
+      background: white;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      padding: 24px;
+      text-align: center;
+      transition: 0.3s ease;
+    }
+
+    .integrante-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .avatar {
+      width: 95px;
+      height: 95px;
+      border-radius: 50%;
+      margin: 0 auto 16px auto;
+      background: linear-gradient(135deg, var(--amarillo), var(--amarillo2));
+      color: var(--azul);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .integrante-card h4 {
+      color: var(--azul);
+      margin-bottom: 8px;
+    }
+
+    .integrante-card p {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    /* GALERIA */
+    .galeria-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .galeria-item {
+      overflow: hidden;
+      border-radius: var(--radio);
+      box-shadow: var(--sombra);
+      background: white;
+    }
+
+    .galeria-item img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      transition: 0.4s ease;
+    }
+
+    .galeria-item img:hover {
+      transform: scale(1.06);
+    }
+
+    /* CONCLUSION */
+    .conclusion {
+      background: linear-gradient(135deg, var(--azul), var(--azul2));
+      color: white;
+      border-radius: 24px;
+      padding: 45px;
+      box-shadow: var(--sombra);
+    }
+
+    .conclusion h2 {
+      margin-bottom: 16px;
+      font-size: 2rem;
+    }
+
+    .conclusion p {
+      color: #e2e8f0;
+      max-width: 900px;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--azul);
+      color: white;
+      text-align: center;
+      padding: 28px 15px;
+      margin-top: 50px;
+    }
+
+    footer p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    /* ANIMACION SIMPLE */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: all 0.8s ease;
+    }
+
+    .fade-up.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .etapas-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .integrantes-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .galeria-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .info-grid,
+      .objetivos-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .menu {
+        gap: 12px;
+        justify-content: center;
+      }
+
+      .nav {
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .etapas-grid,
+      .integrantes-grid,
+      .galeria-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 78vh;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.7rem;
+      }
+
+      .conclusion {
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container nav">
+      <div class="logo">FISI<span>CURIOSOS</span></div>
+      <nav class="menu">
+        <a href="#inicio">Inicio</a>
+        <a href="#proyecto">Proyecto</a>
+        <a href="#etapas">Etapas</a>
+        <a href="#objetivos">Objetivos</a>
+        <a href="#integrantes">Integrantes</a>
+        <a href="#galeria">Galería</a>
+        <a href="#conclusion">Conclusión</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="container">
+      <div class="hero-content fade-up">
+        <h1>FISICURIOSOS</h1>
+        <p>
+          Proyecto de <strong>Máquina de Rube Goldberg</strong> diseñado para apagar una vela
+          mediante una reacción en cadena compuesta por distintas etapas físicas y mecánicas.
+        </p>
+        <div class="btns">
+          <a href="#proyecto" class="btn btn-primary">Ver proyecto</a>
+          <a href="#etapas" class="btn btn-secondary">Conocer etapas</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROYECTO -->
+  <section id="proyecto">
+    <div class="container">
+      <h2 class="section-title fade-up">¿Qué es nuestro proyecto?</h2>
+      <p class="section-subtitle fade-up">
+        Nuestra propuesta consiste en construir una máquina de Rube Goldberg, es decir,
+        un sistema que realiza una tarea sencilla a través de una secuencia de eventos
+        encadenados, aprovechando principios de la física como movimiento, energía,
+        transferencia de impulso y gravedad.
+      </p>
+
+      <div class="info-grid">
+        <div class="card fade-up">
+          <h3>Descripción general</h3>
+          <p>
+            El objetivo de esta máquina es <span class="highlight">apagar una vela</span>
+            mediante una reacción en cadena que atraviesa diferentes etapas. Cada elemento
+            del sistema cumple una función específica para lograr el resultado final,
+            mostrando cómo distintos fenómenos físicos pueden integrarse en una solución creativa.
+          </p>
+          <br>
+          <p>
+            Este proyecto no solo busca cumplir una tarea, sino también demostrar la aplicación
+            práctica de conceptos de física, creatividad en el diseño, resolución de problemas
+            y trabajo colaborativo.
+          </p>
+        </div>
+
+        <div class="card fade-up">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop" alt="Proyecto Rube Goldberg">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ETAPAS -->
+  <section id="etapas">
+    <div class="container">
+      <h2 class="section-title fade-up">Etapas de la máquina</h2>
+      <p class="section-subtitle fade-up">
+        La reacción en cadena se divide en cinco etapas principales. Puedes cambiar
+        estos textos según cómo funcione exactamente tu máquina.
+      </p>
+
+      <div class="etapas-grid">
+        <div class="etapa-card fade-up">
+          <div class="etapa-num">1</div>
+          <h4>Activación inicial</h4>
+          <p>
+            Un elemento da inicio al sistema, generando el primer movimiento que desencadena
+            toda la secuencia.
+          </p>
+        </div>
+
+        <div class="etapa-card fade-up">
+          <div class="etapa-num">2</div>
+          <h4>Transferencia de movimiento</h4>
+          <p>
+            El impulso se transfiere hacia el siguiente componente, manteniendo la continuidad
+            de la reacción.
+          </p>
+        </div>
+
+        <div class="etapa-card fade-up">
+          <div class="etapa-num">3</div>
+          <h4>Impulso mecánico</h4>
+          <p>
+            Se genera una acción más visible, como el desplazamiento de un objeto o el cambio
+            de dirección de la energía.
+          </p>
+        </div>
+
+        <div class="etapa-card fade-up">
+          <div class="etapa-num">4</div>
+          <h4>Reacción final</h4>
+          <p>
+            La secuencia se acerca a su objetivo, activando el mecanismo que permitirá apagar
+            la vela.
+          </p>
+        </div>
+
+        <div class="etapa-card fade-up">
+          <div class="etapa-num">5</div>
+          <h4>Apagado de la vela</h4>
+          <p>
+            El último evento produce el resultado final del proyecto: apagar la vela de manera
+            indirecta y controlada.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OBJETIVOS -->
+  <section id="objetivos">
+    <div class="container">
+      <h2 class="section-title fade-up">Objetivos del proyecto</h2>
+      <p class="section-subtitle fade-up">
+        Aquí ya están redactados de forma más formal y completa.
+      </p>
+
+      <div class="objetivos-grid">
+        <div class="objetivo-box fade-up">
+          <h3>Objetivo general</h3>
+          <p>
+            Diseñar y construir una máquina de Rube Goldberg capaz de apagar una vela mediante
+            una secuencia de eventos físicos y mecánicos encadenados, aplicando principios
+            fundamentales de la física de manera creativa.
+          </p>
+        </div>
+
+        <div class="objetivo-box fade-up">
+          <h3>Objetivos específicos</h3>
+          <ul>
+            <li>Aplicar conceptos de energía, movimiento, impulso y gravedad en un sistema real.</li>
+            <li>Dividir el funcionamiento del proyecto en etapas secuenciales y organizadas.</li>
+            <li>Construir un mecanismo funcional que cumpla con la tarea propuesta.</li>
+            <li>Fomentar la creatividad, el trabajo en equipo y la resolución de problemas.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTEGRANTES -->
+  <section id="integrantes">
+    <div class="container">
+      <h2 class="section-title fade-up">Integrantes</h2>
+      <p class="section-subtitle fade-up">
+        Puedes cambiar los nombres, iniciales y roles según corresponda.
+      </p>
+
+      <div class="integrantes-grid">
+        <div class="integrante-card fade-up">
+          <div class="avatar">JV</div>
+          <h4>Juan Camilo Martínez Méndez</h4>
+          <p>Diseño general del proyecto y documentación.</p>
+        </div>
+
+        <div class="integrante-card fade-up">
+          <div class="avatar">FV</div>
+          <h4>Luis Felipe Vargas Bernal</h4>
+          <p>Montaje experimental y ejecución de pruebas.</p>
+        </div>
+
+        <div class="integrante-card fade-up">
+          <div class="avatar">XX</div>
+          <h4>Nombre del integrante</h4>
+          <p>Análisis del funcionamiento y ajustes finales.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERIA -->
+  <section id="galeria">
+    <div class="container">
+      <h2 class="section-title fade-up">Galería del proyecto</h2>
+      <p class="section-subtitle fade-up">
+        Reemplaza estas imágenes por fotos reales de tu máquina, materiales o proceso de construcción.
+      </p>
+
+      <div class="galeria-grid">
+        <div class="galeria-item fade-up">
+          <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200&auto=format&fit=crop" alt="Galería 1">
+        </div>
+        <div class="galeria-item fade-up">
+          <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200&auto=format&fit=crop" alt="Galería 2">
+        </div>
+        <div class="galeria-item fade-up">
+          <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=1200&auto=format&fit=crop" alt="Galería 3">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONCLUSION -->
+  <section id="conclusion">
+    <div class="container">
+      <div class="conclusion fade-up">
+        <h2>Conclusión</h2>
+        <p>
+          Este proyecto permite evidenciar cómo una tarea sencilla puede resolverse mediante
+          una secuencia compleja y creativa de eventos. La construcción de la máquina de Rube
+          Goldberg fortalece la comprensión de conceptos físicos, el diseño experimental y la
+          capacidad de integrar teoría y práctica en una experiencia dinámica y didáctica.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 FISICURIOSOS | Proyecto Máquina de Rube Goldberg</p>
+  </footer>
+
+  <script>
+    const elements = document.querySelectorAll('.fade-up');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    elements.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
